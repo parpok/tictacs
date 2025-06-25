@@ -23,14 +23,20 @@ struct ContentView: View {
 
     var body: some View {
         VStack {
+            Text("Current turn: \(OTurn ? "O" : "X")")
+                .font(.title)
+                .bold()
+                .foregroundColor(OTurn ? .blue : .red)
+
             LazyVGrid(columns: Array(repeating: GridItem(), count: 3)) {
                 ForEach(game) { field in
                     Button {
-                        if field.state == .empty && !OTurn {
-                            field.state = .X
-                            OTurn.toggle()
-                        } else if field.state == .empty && OTurn {
-                            field.state = .O
+                        if field.state == .empty {
+                            if !OTurn {
+                                field.state = .X
+                            } else {
+                                field.state = .O
+                            }
                             OTurn.toggle()
                         }
                     } label: {
