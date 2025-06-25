@@ -10,6 +10,8 @@ import SwiftUI
 struct ContentView: View {
     @State private var game: [field] = []
 
+    @State private var OTurn: Bool = false
+
     func makeField() {
         let length = 1...9
 
@@ -24,8 +26,12 @@ struct ContentView: View {
             LazyVGrid(columns: Array(repeating: GridItem(), count: 3)) {
                 ForEach(game) { field in
                     Button {
-                        if field.state == .empty {
+                        if field.state == .empty && !OTurn {
                             field.state = .X
+                            OTurn.toggle()
+                        } else if field.state == .empty && OTurn {
+                            field.state = .O
+                            OTurn.toggle()
                         }
                     } label: {
                         Text("\(field.fieldId)")
