@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
     // 9 fields in one. like 0,1,2 /n 3,4,5 /n 6,7,8
@@ -42,6 +43,7 @@ struct ContentView: View {
                 gameStop = true
                 print("\(gameBoard[checkedField[0]].state) wins!")
                 winText = "\(gameBoard[checkedField[0]].state) wins!"
+                
                 return
             }
         }

@@ -6,6 +6,21 @@
 //
 
 import Foundation
+import SwiftData
+
+//@Model
+//class GamesData {
+//
+//    var GameID: UUID = UUID()
+//
+//    /// Array of fields my friend
+//    var GameField: [field]
+//
+//    init(GameID: UUID, GameField: [field]) {
+//        self.GameID = GameID
+//        self.GameField = GameField
+//    }
+//}
 
 @Observable
 class field: Identifiable {
