@@ -19,8 +19,8 @@ class field: Identifiable {
 
 enum fieldState {
     case empty, X, O
-    
-    var description : String {
+
+    var description: String {
         switch self {
         case .empty:
             return " "
