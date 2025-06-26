@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var game: [field] = []
+    // 9 fields in one. like 0,1,2 /n 3,4,5 /n 6,7,8
+    @State private var gameBoard: [field] = []
 
     @State private var OTurn: Bool = false
 
@@ -21,7 +22,7 @@ struct ContentView: View {
 
         for i in length {
             let field = field(fieldId: i, state: .empty)
-            game.append(field)
+            gameBoard.append(field)
         }
     }
 
@@ -31,14 +32,14 @@ struct ContentView: View {
     ]
 
     func checkWinning() {
-        for combo in winningCombinations {
-            if game[combo[0]].state == game[combo[1]].state
-                && game[combo[1]].state == game[combo[2]].state
-                && game[combo[0]].state != .empty
+        for checkedField in winningCombinations {
+            if gameBoard[checkedField[0]].state == gameBoard[checkedField[1]].state
+                && gameBoard[checkedField[1]].state == gameBoard[checkedField[2]].state
+                && gameBoard[checkedField[0]].state != .empty
             {
                 gameStop = true
-                print("\(game[combo[0]].state) wins!")
-                winText = "\(game[combo[0]].state) wins!"
+                print("\(gameBoard[checkedField[0]].state) wins!")
+                winText = "\(gameBoard[checkedField[0]].state) wins!"
                 return
             }
         }
@@ -58,7 +59,7 @@ struct ContentView: View {
             }
 
             LazyVGrid(columns: Array(repeating: GridItem(), count: 3)) {
-                ForEach(game) { field in
+                ForEach(gameBoard) { field in
                     Button {
                         if field.state == .empty && !gameStop {
                             if !OTurn {
