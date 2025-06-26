@@ -33,8 +33,10 @@ struct ContentView: View {
 
     func checkWinning() {
         for checkedField in winningCombinations {
-            if gameBoard[checkedField[0]].state == gameBoard[checkedField[1]].state
-                && gameBoard[checkedField[1]].state == gameBoard[checkedField[2]].state
+            if gameBoard[checkedField[0]].state
+                == gameBoard[checkedField[1]].state
+                && gameBoard[checkedField[1]].state
+                    == gameBoard[checkedField[2]].state
                 && gameBoard[checkedField[0]].state != .empty
             {
                 gameStop = true
@@ -49,12 +51,16 @@ struct ContentView: View {
         VStack {
             if !gameStop {
                 Text("Current turn: \(OTurn ? "O" : "X")")
-                    .font(.title)
+                    #if !os(watchOS)
+                        .font(.title)
+                    #endif
                     .bold()
                     .foregroundColor(OTurn ? .blue : .red)
             } else {
                 Text(winText)
-                    .font(.title)
+                    #if !os(watchOS)
+                        .font(.title)
+                    #endif
                     .bold()
             }
 
@@ -72,7 +78,7 @@ struct ContentView: View {
                             OTurn.toggle()
                         }
                     } label: {
-                        Text("\(field.fieldId)")
+                        Text("")
                         Text("\(field.state.description)")
                     }
 
