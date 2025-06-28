@@ -5,12 +5,11 @@
 //  Created by Patryk Puciłowski on 25/06/2025.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct ContentView: View {
     // 9 fields in one. like 0,1,2 /n 3,4,5 /n 6,7,8
-    @State private var gameBoard: [field] = []
 
     @State private var OTurn: Bool = false
 
@@ -18,14 +17,12 @@ struct ContentView: View {
 
     @State private var winText: String = ""
 
-    func makeField() {
-        let length = 0...8
+    @Environment(\.modelContext) private var modelContext
 
-        for i in length {
-            let field = field(fieldId: i, state: .empty)
-            gameBoard.append(field)
-        }
-    }
+    @State private var gameBoard: Game = Game(
+        gameID: UUID(),
+        creationTime: .now
+    )
 
     let winningCombinations = [
         [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8],
@@ -34,16 +31,17 @@ struct ContentView: View {
 
     func checkWinning() {
         for checkedField in winningCombinations {
-            if gameBoard[checkedField[0]].state
-                == gameBoard[checkedField[1]].state
-                && gameBoard[checkedField[1]].state
-                    == gameBoard[checkedField[2]].state
-                && gameBoard[checkedField[0]].state != .empty
+            if gameBoard.fields[checkedField[0]]
+                == gameBoard.fields[checkedField[1]]
+                && gameBoard.fields[checkedField[1]]
+                    == gameBoard.fields[checkedField[2]]
+                && gameBoard.fields[checkedField[0]]
+                    != fieldState.empty
             {
                 gameStop = true
-                print("\(gameBoard[checkedField[0]].state) wins!")
-                winText = "\(gameBoard[checkedField[0]].state) wins!"
-                
+                print("\(gameBoard.fields[checkedField[0]]) wins!")
+                winText = "\(gameBoard.fields[checkedField[0]]) wins!"
+
                 return
             }
         }
@@ -67,29 +65,35 @@ struct ContentView: View {
             }
 
             LazyVGrid(columns: Array(repeating: GridItem(), count: 3)) {
-                ForEach(gameBoard) { field in
+                ForEach(gameBoard.fields.indices, id: \.self) { index in
                     Button {
-                        if field.state == .empty && !gameStop {
+                        if gameBoard.fields[index] == .empty && !gameStop {
                             if !OTurn {
-                                field.state = .X
+                                gameBoard.fields[index] = .X
                                 checkWinning()
                             } else {
-                                field.state = .O
+                                gameBoard.fields[index] = .O
                                 checkWinning()
                             }
                             OTurn.toggle()
                         }
                     } label: {
-                        Text("")
-                        Text("\(field.state.description)")
+                        Text(index.description)
+                        Text(gameBoard.fields[index].description)
                     }
 
                 }
             }
+            
+            Button{
+                gameBoard.reset()
+                gameStop = false
+            } label: {
+                Text("RESET")
+            }
 
         }
         .padding()
-        .onAppear(perform: makeField)
     }
 }
 

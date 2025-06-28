@@ -8,31 +8,24 @@
 import Foundation
 import SwiftData
 
-//@Model
-//class GamesData {
-//
-//    var GameID: UUID = UUID()
-//
-//    /// Array of fields my friend
-//    var GameField: [field]
-//
-//    init(GameID: UUID, GameField: [field]) {
-//        self.GameID = GameID
-//        self.GameField = GameField
-//    }
-//}
+@Model
+class Game: Identifiable {
+    var gameID: UUID
+    var fields: [fieldState]
+    var creationTime: Date
+    
+    func reset() {
+        self.fields = Array(repeating: .empty, count: 9)
+    }
 
-@Observable
-class field: Identifiable {
-    var fieldId: Int
-    var state: fieldState = .empty
-    init(fieldId: Int, state: fieldState) {
-        self.fieldId = fieldId
-        self.state = state
+    init(gameID: UUID, creationTime: Date) {
+        self.gameID = gameID
+        self.fields = Array(repeating: .empty, count: 9)
+        self.creationTime = creationTime
     }
 }
 
-enum fieldState {
+enum fieldState: Codable {
     case empty, X, O
 
     var description: String {
