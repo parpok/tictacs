@@ -13,6 +13,7 @@ class Game: Identifiable {
     var gameID: UUID
     var fields: [fieldState]
     var creationTime: Date
+    var isWon: Bool
     
     func reset() {
         self.fields = Array(repeating: .empty, count: 9)
@@ -22,6 +23,7 @@ class Game: Identifiable {
         self.gameID = gameID
         self.fields = Array(repeating: .empty, count: 9)
         self.creationTime = creationTime
+        self.isWon = false
     }
 }
 
