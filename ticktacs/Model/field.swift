@@ -13,7 +13,8 @@ class Game: Identifiable {
     var gameID: UUID
     var fields: [fieldState]
     var creationTime: Date
-    var isWon: Bool
+    var isCompleted: Bool
+    var endGameType: EndGameTypes?
     
     func reset() {
         self.fields = Array(repeating: .empty, count: 9)
@@ -23,7 +24,7 @@ class Game: Identifiable {
         self.gameID = gameID
         self.fields = Array(repeating: .empty, count: 9)
         self.creationTime = creationTime
-        self.isWon = false
+        self.isCompleted = false
     }
 }
 
@@ -38,6 +39,21 @@ enum fieldState: Codable {
             return "X"
         case .O:
             return "O"
+        }
+    }
+}
+
+enum EndGameTypes: Codable {
+    case X,O,Tie
+    
+    var description: String {
+        switch self {
+        case .X:
+            return "X"
+        case .O:
+            return "O"
+        case .Tie:
+            return "TIE"
         }
     }
 }

@@ -29,6 +29,11 @@ struct ContentView: View {
                 }
             }
         }
+//        .onAppear {
+//            if !games[0].isCompleted{
+//                
+//            }
+//        }
     }
 }
 
