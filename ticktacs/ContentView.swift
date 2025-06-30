@@ -11,29 +11,51 @@ import SwiftUI
 struct ContentView: View {
 
     @Query var games: [Game]
+    @Environment(\.modelContext) private var modelContext
 
     var body: some View {
         NavigationStack {
 
-            NavigationLink(
-                destination: GameView(
-                    gameBoard: Game(gameID: UUID(), creationTime: .now)
-                )
-            ) {
-                Text("NEW GAME")
-            }
+            List {
+                Section {
+                    NavigationLink(
+                        destination: GameView(
+                            gameBoard: Game(gameID: UUID(), creationTime: .now)
+                        )
+                    ) {
+                        Text("NEW GAME")
+                    }
+                }
+                if !games.isEmpty {
+                    Section("Previous games") {
+                        ForEach(games) { game in
 
-            ForEach(games) { game in
-                NavigationLink(destination: GameView(gameBoard: game)) {
-                    Text("Game \(game.creationTime)")
+                            NavigationLink(
+                                destination: GameView(gameBoard: game)
+                            ) {
+                                Text("Game \(game.creationTime)")
+                            }
+                            .swipeActions {
+                                Button(
+                                    "Delete",
+                                    systemImage: "trash",
+                                    role: .destructive
+                                ) {
+                                    modelContext.delete(game)
+                                }
+                            }
+                        }
+                    }
                 }
             }
+            .navigationTitle("tictacs")
+
         }
-//        .onAppear {
-//            if !games[0].isCompleted{
-//                
-//            }
-//        }
+        //        .onAppear {
+        //            if !games[0].isCompleted{
+        //
+        //            }
+        //        }
     }
 }
 

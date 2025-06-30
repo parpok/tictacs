@@ -9,8 +9,6 @@ import SwiftData
 import SwiftUI
 
 struct GameView: View {
-    // 9 fields in one. like 0,1,2 /n 3,4,5 /n 6,7,8
-
     @State private var OTurn: Bool = false
 
     @State private var winText: String = ""
@@ -101,12 +99,12 @@ struct GameView: View {
                     }
                 }
 
-                Button {
-                    gameBoard.reset()
-                    gameBoard.isCompleted = false
-                } label: {
-                    Text("RESET")
-                }
+//                Button {
+//                    gameBoard.reset()
+//                    gameBoard.isCompleted = false
+//                } label: {
+//                    Text("RESET")
+//                }
 
             }
             .padding()
