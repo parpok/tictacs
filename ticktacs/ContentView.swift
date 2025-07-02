@@ -44,6 +44,17 @@ struct ContentView: View {
                                     modelContext.delete(game)
                                 }
                             }
+                            #if os(macOS)
+                                .contextMenu {
+                                    Button(
+                                        "Delete",
+                                        systemImage: "trash",
+                                        role: .destructive
+                                    ) {
+                                        modelContext.delete(game)
+                                    }
+                                }
+                            #endif
                         }
                     }
                 }
