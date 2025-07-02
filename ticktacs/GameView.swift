@@ -11,6 +11,8 @@ import SwiftUI
 struct GameView: View {
     @State private var OTurn: Bool = false
 
+    @State private var CPUPlay: Bool = false
+
     @State private var winText: String = ""
 
     @Environment(\.modelContext) private var modelContext
@@ -24,6 +26,22 @@ struct GameView: View {
         [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8],
         [0, 4, 8], [2, 4, 6],
     ]
+
+    
+    /// for now CPU is the Circle but Bot play
+    func playAsCPU() {
+        var fieldToMark = Int()
+        repeat {
+            fieldToMark = Int.random(in: 0...8)
+        } while gameBoard.fields[fieldToMark] != .empty
+
+        gameBoard.fields[fieldToMark] = .O
+
+        
+        OTurn.toggle()
+        checkWinning()
+        try! modelContext.save()
+    }
 
     func checkWinning() {
         for checkedField in winningCombinations {
@@ -78,11 +96,17 @@ struct GameView: View {
                 LazyVGrid(columns: Array(repeating: GridItem(), count: 3)) {
                     ForEach(gameBoard.fields.indices, id: \.self) { index in
                         Button {
-                            if gameBoard.fields[index] == .empty && !gameBoard.isCompleted {
+                            if gameBoard.fields[index] == .empty
+                                && !gameBoard.isCompleted
+                            {
                                 gameBoard.fields[index] = OTurn ? .O : .X
                                 checkWinning()
                                 try! modelContext.save()
                                 OTurn.toggle()
+
+                                if CPUPlay {
+                                    playAsCPU()
+                                }
                             }
                         } label: {
                             VStack {
