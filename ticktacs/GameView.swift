@@ -78,38 +78,27 @@ struct GameView: View {
                 LazyVGrid(columns: Array(repeating: GridItem(), count: 3)) {
                     ForEach(gameBoard.fields.indices, id: \.self) { index in
                         Button {
-                            if gameBoard.fields[index] == .empty
-                                && !gameBoard.isCompleted
-                            {
-                                if !OTurn {
-                                    gameBoard.fields[index] = .X
-                                    checkWinning()
-                                } else {
-                                    gameBoard.fields[index] = .O
-                                    checkWinning()
-                                }
+                            if gameBoard.fields[index] == .empty && !gameBoard.isCompleted {
+                                gameBoard.fields[index] = OTurn ? .O : .X
+                                checkWinning()
                                 try! modelContext.save()
                                 OTurn.toggle()
                             }
                         } label: {
-                            Text(index.description)
-                            Text(gameBoard.fields[index].description)
+                            VStack {
+                                Text(gameBoard.fields[index].description)
+                                    .padding()
+                            }
                         }
-
+                        .buttonStyle(.bordered)
+                        .buttonBorderShape(.roundedRectangle(radius: 8))
                     }
                 }
-
-//                Button {
-//                    gameBoard.reset()
-//                    gameBoard.isCompleted = false
-//                } label: {
-//                    Text("RESET")
-//                }
-
             }
             .padding()
             .onAppear {
                 modelContext.insert(gameBoard)
+                checkWinning()
             }
         }
     }
