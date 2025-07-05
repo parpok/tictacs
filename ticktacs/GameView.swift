@@ -27,20 +27,36 @@ struct GameView: View {
         [0, 4, 8], [2, 4, 6],
     ]
 
-    
     /// for now CPU is the Circle but Bot play
     func playAsCPU() {
         var fieldToMark = Int()
+
+        guard gameBoard.fields.contains(.empty) else {
+            print("No empty fields for CPU to play")
+            gameBoard.isCompleted = true
+            gameBoard.endGameType = .Tie
+            winText = "TIE"
+            do {
+                try modelContext.save()
+            } catch {
+                print("Failed to save CPU move: \(error)")
+            }
+            return
+        }
+
         repeat {
             fieldToMark = Int.random(in: 0...8)
         } while gameBoard.fields[fieldToMark] != .empty
 
         gameBoard.fields[fieldToMark] = .O
 
-        
         OTurn.toggle()
         checkWinning()
-        try! modelContext.save()
+        do {
+            try modelContext.save()
+        } catch {
+            print("Failed to save CPU move: \(error)")
+        }
     }
 
     func checkWinning() {
@@ -77,6 +93,13 @@ struct GameView: View {
 
     var body: some View {
         NavigationStack {
+
+            VStack {
+                Toggle(isOn: $CPUPlay) {
+                    Text("CPU GAMING")
+                }
+            }
+
             VStack {
                 if !gameBoard.isCompleted {
                     Text("Current turn: \(OTurn ? "O" : "X")")
@@ -101,7 +124,13 @@ struct GameView: View {
                             {
                                 gameBoard.fields[index] = OTurn ? .O : .X
                                 checkWinning()
-                                try! modelContext.save()
+                                do {
+                                    try modelContext.save()
+                                } catch {
+                                    print(
+                                        "Failed to save Player move: \(error)"
+                                    )
+                                }
                                 OTurn.toggle()
 
                                 if CPUPlay {
