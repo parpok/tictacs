@@ -98,7 +98,7 @@ struct GameView: View {
                 Toggle(isOn: $CPUPlay) {
                     Text("CPU GAMING")
                 }
-            }
+            }.padding()
 
             VStack {
                 if !gameBoard.isCompleted {
@@ -118,33 +118,65 @@ struct GameView: View {
 
                 LazyVGrid(columns: Array(repeating: GridItem(), count: 3)) {
                     ForEach(gameBoard.fields.indices, id: \.self) { index in
-                        Button {
-                            if gameBoard.fields[index] == .empty
-                                && !gameBoard.isCompleted
-                            {
-                                gameBoard.fields[index] = OTurn ? .O : .X
-                                checkWinning()
-                                do {
-                                    try modelContext.save()
-                                } catch {
-                                    print(
-                                        "Failed to save Player move: \(error)"
-                                    )
-                                }
-                                OTurn.toggle()
+                        if #available(iOS 26.0, macOS 26.0, watchOS 26.0,
+                        tvOS 26.0, *) {
+                            Button {
+                                if gameBoard.fields[index] == .empty
+                                    && !gameBoard.isCompleted
+                                {
+                                    gameBoard.fields[index] = OTurn ? .O : .X
+                                    checkWinning()
+                                    do {
+                                        try modelContext.save()
+                                    } catch {
+                                        print(
+                                            "Failed to save Player move: \(error)"
+                                        )
+                                    }
+                                    OTurn.toggle()
 
-                                if CPUPlay {
-                                    playAsCPU()
+                                    if CPUPlay {
+                                        playAsCPU()
+                                    }
+                                }
+                            } label: {
+                                VStack {
+                                    Text(gameBoard.fields[index].description)
+                                        .padding()
                                 }
                             }
-                        } label: {
-                            VStack {
-                                Text(gameBoard.fields[index].description)
-                                    .padding()
+                            .buttonStyle(.bordered)
+                            .buttonBorderShape(.roundedRectangle(radius: 8))
+                            .glassEffect(in: .rect(cornerRadius: 16.0))
+                        } else {
+                            Button {
+                                if gameBoard.fields[index] == .empty
+                                    && !gameBoard.isCompleted
+                                {
+                                    gameBoard.fields[index] = OTurn ? .O : .X
+                                    checkWinning()
+                                    do {
+                                        try modelContext.save()
+                                    } catch {
+                                        print(
+                                            "Failed to save Player move: \(error)"
+                                        )
+                                    }
+                                    OTurn.toggle()
+
+                                    if CPUPlay {
+                                        playAsCPU()
+                                    }
+                                }
+                            } label: {
+                                VStack {
+                                    Text(gameBoard.fields[index].description)
+                                        .padding()
+                                }
                             }
+                            .buttonStyle(.bordered)
+                            .buttonBorderShape(.roundedRectangle(radius: 8))
                         }
-                        .buttonStyle(.bordered)
-                        .buttonBorderShape(.roundedRectangle(radius: 8))
                     }
                 }
             }
