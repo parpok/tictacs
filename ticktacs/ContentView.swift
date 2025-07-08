@@ -10,16 +10,19 @@ import SwiftUI
 
 struct ContentView: View {
 
-    @Query var games: [Game]
+    @Query(sort: \Game.creationTime, order: .reverse) var games: [Game]
     @Environment(\.modelContext) private var modelContext
+    @State var CPUPlay: Bool = false
 
     var body: some View {
         NavigationStack {
 
             List {
                 Section {
+                    Toggle("Single player game with CPU", isOn: $CPUPlay)
                     NavigationLink(
                         destination: GameView(
+                            CPUPlay: CPUPlay,
                             gameBoard: Game(gameID: UUID(), creationTime: .now)
                         )
                     ) {
@@ -34,6 +37,8 @@ struct ContentView: View {
                                 destination: GameView(gameBoard: game)
                             ) {
                                 Text("Game \(game.creationTime)")
+                                Text(game.endGameType?.description ?? "Ongoing")
+                                    .bold()
                             }
                             .swipeActions {
                                 Button(

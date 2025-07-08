@@ -15,6 +15,7 @@ class Game: Identifiable {
     var creationTime: Date
     var isCompleted: Bool
     var endGameType: EndGameTypes?
+    var gameStyle: GameStyles?
     
     func reset() {
         self.fields = Array(repeating: .empty, count: 9)
@@ -56,4 +57,8 @@ enum EndGameTypes: Codable {
             return "TIE"
         }
     }
+}
+
+enum GameStyles: Codable {
+    case singlePlayerCPU, localMultiplayer, onlineMultiplayer
 }

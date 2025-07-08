@@ -11,7 +11,7 @@ import SwiftUI
 struct GameView: View {
     @State private var OTurn: Bool = false
 
-    @State private var CPUPlay: Bool = false
+    var CPUPlay: Bool?
 
     @State private var winText: String = ""
 
@@ -95,12 +95,6 @@ struct GameView: View {
         NavigationStack {
 
             VStack {
-                Toggle(isOn: $CPUPlay) {
-                    Text("CPU GAMING")
-                }
-            }.padding()
-
-            VStack {
                 if !gameBoard.isCompleted {
                     Text("Current turn: \(OTurn ? "O" : "X")")
                         #if !os(watchOS)
@@ -135,9 +129,10 @@ struct GameView: View {
                                     }
                                     OTurn.toggle()
 
-                                    if CPUPlay {
-                                        playAsCPU()
+                                    guard CPUPlay != nil else {
+                                        return
                                     }
+                                    playAsCPU()
                                 }
                             } label: {
                                 VStack {
@@ -164,9 +159,11 @@ struct GameView: View {
                                     }
                                     OTurn.toggle()
 
-                                    if CPUPlay {
-                                        playAsCPU()
+                                    guard CPUPlay != nil else {
+                                        return
                                     }
+                                    playAsCPU()
+
                                 }
                             } label: {
                                 VStack {
